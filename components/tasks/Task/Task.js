@@ -11,7 +11,7 @@ import {
     Keyboard,
     Pressable,
     TouchableWithoutFeedback,
-    ScrollView
+    ScrollView, TouchableOpacity
 } from "react-native";
 
 import {useDispatch, useSelector} from "react-redux";
@@ -20,7 +20,14 @@ import {useDispatch, useSelector} from "react-redux";
 import TaskItem from "../TaskItem/TaskItem";
 import TaskPoint from "../TaskPoint/TaskPoint";
 
-import {changeDescription, setDescription} from "../../../src/redux/tasks/tasksActions";
+import {
+    addPoint,
+    addTask,
+    changeDescription,
+    completeTask,
+    setDescription
+} from "../../../src/redux/tasks/tasksActions";
+import Add from "../../elements/Add";
 
 
 const styles = StyleSheet.create({
@@ -54,43 +61,59 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginBottom: 10
     },
-    descriptionParagraph: {
-        padding: 10,
+    pencilContainer: {
+        height: '100%',
+        width: "10%",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    pencil: {
+        height: 20,
+        width: 20,
+    },
+    inputField:{
         borderRadius: 5,
         borderColor: "#F0C53F",
         borderWidth: 1,
-        paddingRight: 40,
-        paddingBottom: 15,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+    },
+    input: {
         maxHeight: 200,
+        width: "90%",
+        padding: 10,
+
     },
-    pencil: {
-        position: "absolute",
-        right: 10,
-        top: 10,
-        height: 20,
-        width: 20,
-    },
-    pencilContainer: {
-        position: "absolute",
-        right: 10,
-        top: 0,
-        height: 20,
-        width: 20,
-    }
+
 });
 
 const Tasks = ({navigation, route}) => {
 
-    const {task} = route.params
+    const {index} = route.params
 
     const dispatch = useDispatch();
 
-
+    const tasks = useSelector(state => state.tasks.tasks);
+    const [task, setTask] = useState(tasks[index])
     const [description, setDescription] = useState(task.description)
+
+
+    useEffect(()=>{
+        setTask(tasks[index])
+        setDescription(tasks[index].description)
+    }, [tasks])
+
+    if(!task){
+        return <></>
+    }
 
     return (
         <ScrollView>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <TouchableWithoutFeedback
+            // onPress={Keyboard.dismiss}
+            accessible={false}
+        >
             <View style={styles.container}>
                 <Text style={styles.title}>
                     {task.title}
@@ -100,12 +123,14 @@ const Tasks = ({navigation, route}) => {
                         Описание
                     </Text>
 
-                    <View>
+                    <View style={styles.inputField}>
+
                         <TextInput
-                            style={styles.descriptionParagraph}
+                            style={styles.input}
                             value={description}
                             onChangeText={text => setDescription(text)}
                             multiline={true}
+                            numberOfLines={3}
                         />
                         <Pressable
                             style={styles.pencilContainer}
@@ -120,9 +145,12 @@ const Tasks = ({navigation, route}) => {
                         </Pressable>
                     </View>
                 </View>
+                <Add addEL={(title)=>{return addPoint(title, task.id)}} icon={()=>require("../../../assets/add.png")} />
 
-                    {task.points.map((point, i) => (
-                        <TaskPoint key={i} point={point} navigation={navigation}/>
+
+
+                {task.points.map((point, i) => (
+                        <TaskPoint key={i} point={point} navigation={navigation} taskId={task.id}/>
                     ))}
 
                     {/*keyExtractor={(item, i) => i.toString()}*/}

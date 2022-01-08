@@ -1,0 +1,2 @@
+export const ADD_TODAY_TASK = "ADD_TODAY_TASK";
+export const COMPLETE_TODAY_TASK = "COMPLETE_TODAY_TASK";

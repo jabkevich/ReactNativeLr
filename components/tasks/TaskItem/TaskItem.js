@@ -13,34 +13,40 @@ import {
 } from "react-native";
 
 
-import {addTask, removeTask} from "../../../src/redux/tasks/tasksActions";
+import {addTask, completeTask, removeTask} from "../../../src/redux/tasks/tasksActions";
 import {useDispatch} from "react-redux";
 
-const TaskItem = ({task, navigation}) => {
+const TaskItem = ({task, navigation, i}) => {
 
 
     const dispatch = useDispatch();
     return (
         <View
-            style={styles.item}>
-            <TouchableOpacity
-                activeOpacity = {0.7}
-                onPress={()=>{navigation.navigate('Task', { task: task})}
-                }
-            >
-                <Text
-                    ellipsizeMode='tail' numberOfLines={1}
-                    style={styles.text}>
-                    {task.title}
-                </Text>
-            </TouchableOpacity>
+            style={styles.item}
+        >
+            <View style={styles.leftSide}>
+                <TouchableOpacity
+                    style={[styles.mark, task.complete?styles.markCompleted:null]}
+                    onPress={()=>{dispatch(completeTask(task.id))}}
+                />
+
+                <TouchableOpacity
+                    activeOpacity = {0.7}
+                    onPress={()=>{navigation.navigate('Task', { index: i})}}
+                >
+                    <Text
+                        ellipsizeMode='tail' numberOfLines={1}
+                        style={styles.text}>
+                        {task.title}
+                    </Text>
+                </TouchableOpacity>
+            </View>
+
 
             <TouchableOpacity
                 onLongPress={()=> {
                     dispatch(removeTask(task.id))
-                    console.log("onRemove")
                     Vibration.vibrate()
-                    console.log("remove")
                 }}
             >
             <Image
@@ -67,12 +73,27 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 5,
     },
+    leftSide: {
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    mark: {
+        borderColor: "grey",
+        borderWidth: 1,
+        width: 20,
+        height: 20,
+        marginLeft: 20,
+        borderRadius: 2,
+    },
+    markCompleted: {
+        borderColor: "#abe233",
+      backgroundColor: "#abe233"
+    },
     text: {
         color: "#ff7816",
         fontWeight: "bold",
         padding: 20,
         maxWidth: 250,
-
     },
     trash: {
         margin: 20,

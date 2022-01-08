@@ -13,32 +13,35 @@ import {
 } from "react-native";
 
 
-import {addTask, completePoint, completeTask, removeTask} from "../../../src/redux/tasks/tasksActions";
-import {useDispatch} from "react-redux";
 
-const TaskPoint = ({taskId, point, navigation}) => {
+import {useDispatch} from "react-redux";
+import {completeTodayTask} from "../../src/redux/today/todayActions";
+
+const TaskToday = ({task}) => {
 
 
     const dispatch = useDispatch();
     return (
         <View
             style={styles.item}>
-                <Text
-                    ellipsizeMode='tail'
-                    numberOfLines={1}
-                    style={styles.text}>
-                    {point.title}
-                </Text>
+            <Text
+                ellipsizeMode='tail'
+                numberOfLines={1}
+                style={styles.text}>
+                {task.title}
+            </Text>
             <TouchableOpacity
-                style={[styles.mark, point.complete?styles.markCompleted:null]}
-                onPress={()=>{dispatch(completePoint(taskId, point.id))}}
+                style={[styles.mark, task.complete?styles.markCompleted:null]}
+                onPress={()=> {
+                  dispatch(completeTodayTask(task.id))
+                }}
             />
         </View >
     )
 }
 
 
-export default TaskPoint;
+export default TaskToday;
 
 
 const styles = StyleSheet.create({

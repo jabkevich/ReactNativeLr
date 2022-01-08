@@ -2,9 +2,6 @@ import React, {useState, useEffect} from "react";
 import {Dimensions, FlatList, StyleSheet, View, Text, Button, TextInput, Pressable, Image} from "react-native";
 
 import {useDispatch, useSelector} from "react-redux";;
-import TaskItem from "../TaskItem/TaskItem";
-import {addTask, changeDescription} from "../../../src/redux/tasks/tasksActions";
-import Add from "../../elements/Add";
 
 
 const styles = StyleSheet.create({
@@ -53,9 +50,8 @@ const styles = StyleSheet.create({
     },
 });
 
-const Tasks = ({navigation}) => {
+const Add = ({addEL, icon}) => {
 
-    const tasks = useSelector(state => state.tasks.tasks);
 
     const dispatch = useDispatch();
 
@@ -63,28 +59,27 @@ const Tasks = ({navigation}) => {
     const [title, setTitle] = useState("");
 
     return (
-        <View style = {styles.container}>
-
-            <Add addEL={addTask} icon={()=>require("../../../assets/add.png")} />
-
-            {
-                tasks.length > 0 &&
-                <FlatList
-                    showsVerticalScrollIndicator={false}
-                    style={styles.list}
-                    keyExtractor={(item, i) => i.toString()}
-                    data={tasks}
-                    renderItem={({item, index})=> <TaskItem task={item} navigation={navigation} i={index} />}
+        <View style={styles.addendum}>
+            <TextInput
+                style={styles.addendumParagraph}
+                value={title}
+                onChangeText={text => setTitle(text)}
+                multiline={true}
+            />
+            <Pressable
+                style={styles.pencilContainer}
+                onPress={() => {
+                    if(title !== "")
+                        dispatch(addEL(title))
+                }}
+            >
+                <Image
+                    style={styles.pencil}
+                    source={icon()}
                 />
-            }
+            </Pressable>
         </View>
     )
 }
 
-export default Tasks;
-
-
-
-
-
-// Dimensions.get('window').height - 70
+export default Add;
