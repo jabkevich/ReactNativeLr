@@ -16,7 +16,7 @@ import {
 import {addTask, completePoint, completeTask, removeTask} from "../../../src/redux/tasks/tasksActions";
 import {useDispatch} from "react-redux";
 
-const TaskPoint = ({taskId, point, navigation}) => {
+const TaskPoint = ({task, point, navigation}) => {
 
 
     const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const TaskPoint = ({taskId, point, navigation}) => {
                 </Text>
             <TouchableOpacity
                 style={[styles.mark, point.complete?styles.markCompleted:null]}
-                onPress={()=>{dispatch(completePoint(taskId, point.id))}}
+                onPress={()=>{dispatch(completePoint(task, point.id))}}
             />
         </View >
     )

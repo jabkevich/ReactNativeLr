@@ -33,7 +33,7 @@ const TaskToday = ({task}) => {
             <TouchableOpacity
                 style={[styles.mark, task.complete?styles.markCompleted:null]}
                 onPress={()=> {
-                  dispatch(completeTodayTask(task.id))
+                  dispatch(completeTodayTask(task))
                 }}
             />
         </View >

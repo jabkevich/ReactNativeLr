@@ -5,102 +5,55 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import {Provider} from "react-redux";
+import {Provider, useDispatch} from "react-redux";
 import store from "./src/redux/store";
 
 import Progress from "./components/progress/Progress/Progress";
 import ToDay from "./components/ToDay/ToDay";
 import TodoNavigation from "./components/tasks/TodoNavigation/TodoNavigation";
 import Themes from "./components/settings/Themes/Themes";
-
-function HomeScreen({ navigation, route }) {
-
-    const { alo, otherParam } = route.params;
-    return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text>{alo}</Text>
-            <Button
-                title="Go to Detailфвs"
-                onPress={() => navigation.navigate('Details')}
-            />
-        </View>
-    );
-}
+import {loadTasks} from "./src/redux/tasks/tasksActions";
+import {loadTodayTasks} from "./src/redux/today/todayActions";
 
 
-function Test({navigation}) {
-    return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text>test</Text>
-        </View>
-    );
-}
-
-function DetailsScreen({navigation}) {
-    return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text>Detailsadad Screen</Text>
-            <Button
-                title="Go t"
-                onPress={() => navigation.navigate('Test')}
-            />
-        </View>
-    );
-}
-
-
-
-const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function Todo({navigation}) {
+
+const Navigation = () =>{
+    const dispatch = useDispatch();
+    useEffect(()=>{
+        dispatch(loadTasks())
+        dispatch(loadTodayTasks())
+    }, [])
+
     return (
+        <NavigationContainer>
+            <Tab.Navigator initialRouteName="Progress">
+                <Tab.Screen
+                    name="Progress"
+                    component={Progress}/>
+                <Tab.Screen
+                    name="To day"
+                    component={ToDay}/>
 
-            <Stack.Navigator initialRouteName="Task">
-                <Stack.Screen
-                    name="Task"
-                    component={DetailsScreen}
-                    options={{
-                        headerShown:false
-                    }}
+                <Tab.Screen
+                    name="Tasks"
+                    component={TodoNavigation}
                 />
-                <Stack.Screen
-                    name="Test"
-                    component={Test}
-                    options={{
-                        headerShown:false
-                    }}
+                <Tab.Screen
+                    name="Themes"
+                    component={Themes}
                 />
-            </Stack.Navigator>
-
-    );
+            </Tab.Navigator>
+        </NavigationContainer>
+    )
 }
 
-
-
-
 function App() {
+
     return (
         <Provider store={store}>
-            <NavigationContainer>
-                <Tab.Navigator initialRouteName="Progress">
-                    <Tab.Screen
-                        name="Progress"
-                        component={Progress}/>
-                    <Tab.Screen
-                        name="To day"
-                        component={ToDay}/>
-
-                    <Tab.Screen
-                        name="Tasks"
-                        component={TodoNavigation}
-                    />
-                    <Tab.Screen
-                        name="Themes"
-                        component={Themes}
-                    />
-                </Tab.Navigator>
-            </NavigationContainer>
+            <Navigation/>
         </Provider>
     );
 }

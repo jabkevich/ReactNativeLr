@@ -27,7 +27,7 @@ const TaskItem = ({task, navigation, i}) => {
             <View style={styles.leftSide}>
                 <TouchableOpacity
                     style={[styles.mark, task.complete?styles.markCompleted:null]}
-                    onPress={()=>{dispatch(completeTask(task.id))}}
+                    onPress={()=>{dispatch(completeTask(task))}}
                 />
 
                 <TouchableOpacity

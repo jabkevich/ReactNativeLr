@@ -135,7 +135,7 @@ const Tasks = ({navigation, route}) => {
                         <Pressable
                             style={styles.pencilContainer}
                             onPress={() => {
-                                dispatch(changeDescription(task.id, description))
+                                dispatch(changeDescription(task, description))
                             }}
                         >
                             <Image
@@ -145,12 +145,12 @@ const Tasks = ({navigation, route}) => {
                         </Pressable>
                     </View>
                 </View>
-                <Add addEL={(title)=>{return addPoint(title, task.id)}} icon={()=>require("../../../assets/add.png")} />
+                <Add addEL={(title)=>{return addPoint(title, task)}} icon={()=>require("../../../assets/add.png")} />
 
 
 
                 {task.points.map((point, i) => (
-                        <TaskPoint key={i} point={point} navigation={navigation} taskId={task.id}/>
+                        <TaskPoint key={i} point={point} navigation={navigation} task={task}/>
                     ))}
 
                     {/*keyExtractor={(item, i) => i.toString()}*/}
